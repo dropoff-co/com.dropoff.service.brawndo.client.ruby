@@ -12,6 +12,16 @@ brawndo = Brawndo.new(config)
 
 info_data = brawndo.info()
 
+p info_data
+
+property_data = brawndo.order.properties({});
+
+p property_data
+
+if true
+  raise('poop');
+end
+
 p '(1.) Reading first page of orders'
 
 order_data = brawndo.order.read({})

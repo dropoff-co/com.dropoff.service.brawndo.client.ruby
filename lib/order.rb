@@ -162,6 +162,39 @@ class Order
     JSON.parse(response.body)
   end
 
+  def properties(params)
+    company_id = nil
+
+    if params.instance_of? Object
+      company_id = params['company_id']
+    end
+
+    properties_uri = URI(@api_url + '/order/properties')
+
+    if company_id
+      qry = {}
+      qry['company_id'] = company_id
+      properties_uri.query = URI.encode_www_form(qry)
+    end
+
+    request = Net::HTTP::Get.new(properties_uri)
+
+    signing_params = Signing.generate_signing_params(request,
+                                                     'GET',
+                                                     'order',
+                                                     properties_uri,
+                                                     @private_key,
+                                                     @public_key)
+
+    Signing.sign(signing_params)
+
+    response = Net::HTTP.start(properties_uri.hostname, properties_uri.port, :use_ssl => (properties_uri.port == 443)) {|http|
+      http.request(request)
+    }
+
+    JSON.parse(response.body)
+  end
+
   def simulate(market)
     market || raise('Missing market parameter')
 
