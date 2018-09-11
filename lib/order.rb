@@ -49,47 +49,46 @@ class Order
   end
 
   def read(params)
-    order_uri = nil
-    signing_params = {}
+    order_read_uri = nil
 
     # Get one order
     if params['order_id']
-      order_uri = URI(@api_url + '/order/' + params['order_id'])
+      order_read_uri = URI(@api_url + '/order/' + params['order_id'])
       if params['company_id']
         qry = {}
         qry['company_id'] = params['company_id']
-        order_uri.query = URI.encode_www_form(qry)
+        order_read_uri.query = URI.encode_www_form(qry)
       end
     # Get a page of orders starting at last_key
     elsif params['last_key']
-      order_uri = URI(@api_url + '/order')
+      order_read_uri = URI(@api_url + '/order')
       qry = {}
       qry['last_key'] = params['last_key']
       if params['company_id']
         qry['company_id'] = params['company_id']
       end
-      order_uri.query = URI.encode_www_form(qry)
+      order_read_uri.query = URI.encode_www_form(qry)
     # Get the first page of orders
     else
-      order_uri = URI(@api_url + '/order')
+      order_read_uri = URI(@api_url + '/order')
       if params['company_id']
         qry = {}
         qry['company_id'] = params['company_id']
-        order_uri.query = URI.encode_www_form(qry)
+        order_read_uri.query = URI.encode_www_form(qry)
       end
     end
 
-    request = Net::HTTP::Get.new(order_uri)
+    request = Net::HTTP::Get.new(order_read_uri)
 
     signing_params = Signing.generate_signing_params(request,
                                                      'GET',
                                                      'order',
-                                                     order_uri,
+                                                     order_read_uri,
                                                      @private_key,
                                                      @public_key)
     Signing.sign(signing_params)
 
-    response = Net::HTTP.start(order_uri.hostname, order_uri.port, :use_ssl => (order_uri.port == 443)) {|http|
+    response = Net::HTTP.start(order_read_uri.hostname, order_read_uri.port, :use_ssl => (order_read_uri.port == 443)) {|http|
       http.request(request)
     }
 
@@ -195,11 +194,39 @@ class Order
     JSON.parse(response.body)
   end
 
-  def simulate(market)
-    market || raise('Missing market parameter')
+  def simulate(params)
+    market = nil
+    order_id = nil
+    simulation_uri = nil
+    company_id = nil
 
-    simulation_uri = URI(@api_url + '/order/simulate/' + market)
-    simulation_uri.query = URI.encode_www_form(params)
+    if params && params['market']
+      market = params['market']
+    end
+
+    if params && params['order_id']
+      order_id = params['order_id']
+    end
+
+    if params && params['company_id']
+      company_id = params['company_id']
+    end
+
+    market || order_id || raise('Missing market or order_id parameter')
+
+    if market
+      simulation_uri = URI(@api_url + '/order/simulate/' + market)
+    elsif order_id
+      simulation_uri = URI(@api_url + '/order/simulate/order/' + order_id)
+    end
+
+    if company_id
+      qry = {}
+      qry['company_id'] = company_id
+      simulation_uri.query = URI.encode_www_form(qry)
+    end
+
+    p simulation_uri
 
     request = Net::HTTP::Get.new(simulation_uri)
 
