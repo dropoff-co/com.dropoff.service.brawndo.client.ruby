@@ -18,6 +18,10 @@ property_data = brawndo.order.properties({});
 
 p property_data
 
+item_data = brawndo.order.items({});
+
+p item_data
+
 if true
   raise('poop');
 end
