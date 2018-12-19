@@ -121,10 +121,40 @@ details['type'] = 'asap';
 
 p details
 
+items = [
+  {
+    'sku' => '128UV9',
+    'quantity' => 3,
+    'weight' => 10,
+    'height' => 1.4,
+    'width' => 1.2,
+    'depth' => 2.3,
+    'unit' => 'ft',
+    'container' => 'BOX',
+    'description' => 'Box of t-shirts',
+    'price' => 59.99,
+    'temperature' => 'NA',
+    'person_name' => 'T. Shirt'
+  },
+  {
+    'sku' => '128UV8',
+    'height' => 9.4,
+    'width' => 6.2,
+    'depth' => 3.3,
+    'unit' => 'in',
+    'container' => 'BOX',
+    'description' => 'Box of socks',
+    'price' => 9.99,
+    'temperature' => 'NA',
+    'person_name' => 'Jim'
+  }
+]
+
 order_data = {
   'origin' => origin,
   'destination' => destination,
-  'details' => details
+  'details' => details,
+  'items' => items
 }
 
 p '(6.1) Creating new order'
