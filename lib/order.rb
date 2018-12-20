@@ -161,6 +161,39 @@ class Order
     JSON.parse(response.body)
   end
 
+  def items(params)
+    company_id = nil
+
+    if params.instance_of? Object
+      company_id = params['company_id']
+    end
+
+    items_uri = URI(@api_url + '/order/items')
+
+    if company_id
+      qry = {}
+      qry['company_id'] = company_id
+      properties_uri.query = URI.encode_www_form(qry)
+    end
+
+    request = Net::HTTP::Get.new(items_uri)
+
+    signing_params = Signing.generate_signing_params(request,
+                                                     'GET',
+                                                     'order',
+                                                     items_uri,
+                                                     @private_key,
+                                                     @public_key)
+
+    Signing.sign(signing_params)
+
+    response = Net::HTTP.start(items_uri.hostname, items_uri.port, :use_ssl => (items_uri.port == 443)) {|http|
+      http.request(request)
+    }
+
+    JSON.parse(response.body)
+  end
+
   def properties(params)
     company_id = nil
 
