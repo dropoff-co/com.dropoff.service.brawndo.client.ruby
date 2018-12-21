@@ -9,6 +9,32 @@ class Order
     @tip
   end
 
+  def temperatures
+    {
+      'NA': 0,
+      'AMBIENT': 100,
+      'REFRIGERATED': 200,
+      'FROZEN': 300
+    }
+  end
+  
+  def containers
+    {
+      'NA': 0,
+      'BAG': 100,
+      'BOX': 200,
+      'TRAY': 300,
+      'PALLET': 400,
+      'BARREL': 500,
+      'BASKET': 600,
+      'BUCKET': 700,
+      'CARTON': 800,
+      'CASE': 900,
+      'COOLER': 1000,
+      'CRATE': 1100
+    }
+  end
+
   def initialize(params)
     @public_key   = params['public_key']
     @private_key  = params['private_key']

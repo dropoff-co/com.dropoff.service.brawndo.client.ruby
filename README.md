@@ -463,10 +463,10 @@ Some notes about items, here are all possible options that can be included but w
 - **depth** - Must be a number greater than 0
 - **width** - Must be a number greater than 0
 - **unit** - Must be in the array, ['in','ft','cm','mm','m']
-- **container** - Must be in the array, ['NA','BAG','BOX','TRAY','PALLET','BARREL','BASKET','BUCKET','CARTON','CASE','COOLER','CRATE']
+- **container** - Must be an integer. Can use the brawndo.order.containers variable to reference possible containers
 - **description** - Must be a string
 - **price** - Must be a valid price format in dollars and cents, ex. 10, 10.5, 10.50, 10.0, 10.00
-- **temperature** - Must be in the array, ['NA','AMBIENT','REFRIGERATED','FROZEN']
+- **temperature** - Must be an integer. Can use the brawndo.order.temperatures variable to reference possilbe temps
 - **person_name** - Must be a string
 
 Passing fields that are disabled for the client will automatically fail creating the order and NOT passing required fields will automatically fail creating the order.
@@ -485,10 +485,10 @@ items = [
     'width' => 1.2,
     'depth' => 2.3,
     'unit' => 'ft',
-    'container' => 'BOX',
+    'container' => brawndo.order.containers[:BOX],
     'description' => 'Box of t-shirts',
     'price' => 59.99,
-    'temperature' => 'NA',
+    'temperature' => brawndo.order.temperatures[:NA],
     'person_name' => 'T. Shirt'
   },
   {
@@ -497,10 +497,10 @@ items = [
     'width' => 6.2,
     'depth' => 3.3,
     'unit' => 'in',
-    'container' => 'BOX',
+    'container' => brawndo.order.containers[:BOX],
     'description' => 'Box of socks',
     'price' => 9.99,
-    'temperature' => 'NA',
+    'temperature' => brawndo.order.temperatures[:NA],
     'person_name' => 'Jim'
   }
 ]

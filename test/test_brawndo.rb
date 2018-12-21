@@ -142,10 +142,10 @@ items = [
     'width' => 6.2,
     'depth' => 3.3,
     'unit' => 'in',
-    'container' => 'BOX',
+    'container' => brawndo.order.containers[:BOX],
     'description' => 'Box of socks',
     'price' => 9.99,
-    'temperature' => 'NA',
+    'temperature' => brawndo.order.temperatures[:NA],
     'person_name' => 'Jim'
   }
 ]
