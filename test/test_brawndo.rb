@@ -1,10 +1,10 @@
 require_relative '../brawndo'
 
 config = {}
-config['public_key'] = 'user::91e9b320b0b5d71098d2f6a8919d0b3d5415db4b80d4b553f46580a60119afc8'
-config['private_key'] = '7f8fee62743d7bb5bf2e79a0438516a18f4a4a4df4d0cfffda26a3b906817482'
-config['api_url'] = 'http://dev.dropoff.com:9094/v1'
-config['host'] = 'dev.dropoff.com:9094'
+config['public_key'] = ''
+config['private_key'] = ''
+config['api_url'] = 'https://sandbox-brawndo.dropoff.com/v1'
+config['host'] = 'sandbox-brawndo.dropoff.com'
 
 duration = 5
 
@@ -14,13 +14,32 @@ info_data = brawndo.info()
 
 p info_data
 
-property_data = brawndo.order.properties({});
+# property_data = brawndo.order.properties({});
 
-p property_data
+# p property_data
+
+driver_action_params = {}
+driver_action_params['company_id'] = ''
+driver_actions_meta_data = brawndo.order.driver_actions_meta(driver_action_params)
+
+p driver_actions_meta_data
 
 item_data = brawndo.order.items({});
 
 p item_data
+
+sig_params = {}
+# sig_params['order_id'] = ''
+sig_data = brawndo.order.signature('')
+
+p sig_data
+
+pu_sig_params = {}
+pu_sig_params['order_id'] = ''
+pu_sig_params['company_id'] = ''
+pu_sig_data = brawndo.order.pickup_signature(pu_sig_params)
+
+p pu_sig_data
 
 if true
   raise('poop');
@@ -54,7 +73,7 @@ p order_data
 sleep(duration)
 
 no_order_id_params = {}
-no_order_id_params['order_id'] = 'zzzzz'
+no_order_id_params['order_id'] = ''
 
 p '(4.) Reading order that DNE'
 
@@ -63,32 +82,35 @@ order_data = brawndo.order.read(no_order_id_params)
 p order_data
 
 origin = {
-  'address_line_1' => '4729 Burnet Rd',        # required
-  'company_name' => 'Pinthouse Pizza North',   # required
-  'first_name' => 'Beer',                      # required
-  'last_name' => 'Pizza',                      # required
-  'phone' => '5124744877',                     # required
-  'email' => 'awoss+pinthouse@dropoff.com',    # required
-  'city' => 'Austin',                          # required
-  'state' => 'TX',                             # required
-  'zip' => '78756',                            # required
-  'lat' => '30.263706',                        # required
-  'lng' => '-97.741703',                       # required
-  'remarks' => 'Be nice to napoleon'           # optional
-}
-
-destination = {
-  'address_line_1' => '2517 Thornton Rd',      # required
-  'company_name' => 'House of Algis',          # required
-  'first_name' => 'Algis',                     # required
-  'last_name' => 'Woss',                       # required
-  'phone' => '8444376763',                     # required
-  'email' => 'awoss@dropoff.com',              # required
+  'address_line_1' => '117 San Jacinto Blvd',  # required
+  'company_name' => 'Dropoff Ruby Origin',     # required
+  'first_name' => 'Napoleon',                  # required
+  'last_name' => 'Bonner',                     # required
+  'phone' => '5125555555',                     # required
+  'email' => 'noreply+origin@dropoff.com',     # required
   'city' => 'Austin',                          # required
   'state' => 'TX',                             # required
   'zip' => '78701',                            # required
-  'lat' => '30.269967',                        # required
-  'lng' => '-97.740838'                        # required
+  'lat' => '30.263706',                        # required
+  'lng' => '-97.741703',                       # required
+  'remarks' => 'Be nice to napoleon',          # optional
+  'driver_actions' => '1100,1300'              # optional
+}
+
+destination = {
+  'address_line_1' => '1601 S MoPac Expy',      # required
+  'address_line_2' => 'C301',                   # optional
+  'company_name' => 'Dropoff Ruby Destination', # required
+  'first_name' => 'Del',                        # required
+  'last_name' => 'Fitzgitibit',                 # required
+  'phone' => '5125555555',                      # required
+  'email' => 'noreply+destination@dropoff.com', # required
+  'city' => 'Austin',                           # required
+  'state' => 'TX',                              # required
+  'zip' => '78746',                             # required
+  'lat' => '30.260228',                         # required
+  'lng' => '-97.793359',                        # required
+  'driver_actions' => '2300'                    # optional
 }
 
 in_two_hours = Time.now.to_i + 7200
@@ -104,8 +126,8 @@ details = {
 }
 
 estimate_params = {};
-estimate_params['origin'] = '4729 Burnet Rd, Austin, TX 78756'
-estimate_params['destination'] = '2517 Thornton Rd, Austin, TX 78704'
+estimate_params['origin'] = '117 San Jacinto Blvd, Austin, TX 78701'
+estimate_params['destination'] = '1601 S MoPac Expy, Austin, TX 78746'
 estimate_params['utc_offset'] = Time.now.utc_offset
 
 p '(5.) Estimating order'
@@ -157,47 +179,47 @@ order_data = {
   'items' => items
 }
 
-p '(6.1) Creating new order'
-p order_data
+# p '(6.1) Creating new order'
+# p order_data
 
-order_response_data = brawndo.order.create(order_data)
+# order_response_data = brawndo.order.create(order_data)
 
-p order_response_data
+# p order_response_data
 
-order_id = order_response_data['data']['order_id']
+# order_id = order_response_data['data']['order_id']
 
-p "(6.2) Created #{order_id}"
-sleep(duration)
+# p "(6.2) Created #{order_id}"
+# sleep(duration)
 
-tip_params = {
-  'order_id' => order_id,
-  'amount' => 5.55
-}
+# tip_params = {
+#   'order_id' => order_id,
+#   'amount' => 5.55
+# }
 
-p "(6.3) Creating order tip #{order_id}"
-tip_data = brawndo.order.tip.create(tip_params)
+# p "(6.3) Creating order tip #{order_id}"
+# tip_data = brawndo.order.tip.create(tip_params)
 
-p tip_data
-p "(6.4) Created order tip #{order_id}"
-sleep(duration)
-
-
-p "(6.5) Getting order tip #{order_id}"
-tip_data = brawndo.order.tip.read(order_id)
-
-p tip_data
-sleep(duration)
+# p tip_data
+# p "(6.4) Created order tip #{order_id}"
+# sleep(duration)
 
 
+# p "(6.5) Getting order tip #{order_id}"
+# tip_data = brawndo.order.tip.read(order_id)
 
-p "(6.6) Deleting order tip #{order_id}"
-tip_data = brawndo.order.tip.delete(order_id)
-
-p tip_data
-sleep(duration)
+# p tip_data
+# sleep(duration)
 
 
-p "(6.7) Cancelling #{order_id}"
-cancel_data = brawndo.order.cancel(order_id)
 
-p cancel_data
+# p "(6.6) Deleting order tip #{order_id}"
+# tip_data = brawndo.order.tip.delete(order_id)
+
+# p tip_data
+# sleep(duration)
+
+
+# p "(6.7) Cancelling #{order_id}"
+# cancel_data = brawndo.order.cancel(order_id)
+
+# p cancel_data
