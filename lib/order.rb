@@ -155,7 +155,7 @@ class Order
       order_id = params
     end
 
-    if params.instance_of? Object
+    if params.instance_of? Hash
       order_id = params['order_id']
       company_id = params['company_id']
     end
@@ -191,7 +191,7 @@ class Order
   def items(params)
     company_id = nil
 
-    if params.instance_of? Object
+    if params.instance_of? Hash
       company_id = params['company_id']
     end
 
@@ -224,7 +224,7 @@ class Order
   def properties(params)
     company_id = nil
 
-    if params.instance_of? Object
+    if params.instance_of? Hash
       company_id = params['company_id']
     end
 
@@ -248,6 +248,109 @@ class Order
     Signing.sign(signing_params)
 
     response = Net::HTTP.start(properties_uri.hostname, properties_uri.port, :use_ssl => (properties_uri.port == 443)) {|http|
+      http.request(request)
+    }
+
+    JSON.parse(response.body)
+  end
+
+  def driver_actions_meta(params)
+    driver_actions_meta_uri = URI(@api_url + '/order/driver_actions_meta')
+
+    request = Net::HTTP::Get.new(driver_actions_meta_uri)
+
+    signing_params = Signing.generate_signing_params(request,
+                                                     'GET',
+                                                     'order',
+                                                     driver_actions_meta_uri,
+                                                     @private_key,
+                                                     @public_key)
+
+    Signing.sign(signing_params)
+
+    response = Net::HTTP.start(driver_actions_meta_uri.hostname, driver_actions_meta_uri.port, :use_ssl => (driver_actions_meta_uri.port == 443)) {|http|
+      http.request(request)
+    }
+
+    JSON.parse(response.body)
+  end
+
+  def signature(params)
+    order_id = nil
+    company_id = nil
+
+    if params.instance_of? String
+      order_id = params
+    end
+
+    if params.instance_of? Hash
+      order_id = params['order_id']
+      company_id = params['company_id']
+    end
+
+    order_id || raise('Missing order_id to fetch signature')
+
+    signature_uri = URI(@api_url + '/order/signature/' + order_id)
+
+    if company_id
+      qry = {}
+      qry['company_id'] = company_id
+      signature_uri.query = URI.encode_www_form(qry)
+    end
+
+    request = Net::HTTP::Get.new(signature_uri)
+
+    signing_params = Signing.generate_signing_params(request,
+                                                     'GET',
+                                                     'order',
+                                                     signature_uri,
+                                                     @private_key,
+                                                     @public_key)
+
+    Signing.sign(signing_params)
+
+    response = Net::HTTP.start(signature_uri.hostname, signature_uri.port, :use_ssl => (signature_uri.port == 443)) {|http|
+      http.request(request)
+    }
+
+    JSON.parse(response.body)
+  end
+
+  def pickup_signature(params)
+    order_id = nil
+    company_id = nil
+
+    if params.instance_of? String
+      order_id = params
+    end
+
+    if params.instance_of? Hash
+      order_id = params['order_id']
+      company_id = params['company_id']
+    end
+
+    order_id || raise('Missing order_id to fetch pickup_signature')
+
+    signature_uri = URI(@api_url + '/order/pickup_signature/' + order_id)
+
+    if company_id
+      qry = {}
+      qry['company_id'] = company_id
+      signature_uri.query = URI.encode_www_form(qry)
+    end
+
+    request = Net::HTTP::Get.new(signature_uri)
+
+    signing_params = Signing.generate_signing_params(request,
+                                                     'GET',
+                                                     'order',
+                                                     signature_uri,
+                                                     @private_key,
+                                                     @public_key)
+
+    Signing.sign(signing_params)
+
+    response = Net::HTTP.start(signature_uri.hostname, signature_uri.port, :use_ssl => (signature_uri.port == 443)) {|http|
       http.request(request)
     }
 
