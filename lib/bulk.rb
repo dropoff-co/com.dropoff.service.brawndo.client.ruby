@@ -12,7 +12,7 @@ class Bulk
     @api_url      = params['api_url']
   end
 
-  def create(params)
+  def create(params, file_location)
     bulk_uri = URI(@api_url + '/bulkupload')
     qry = {}
     qry['company_id'] = params['data']['client']['id']
@@ -21,7 +21,7 @@ class Bulk
     request = Net::HTTP::Post.new(bulk_uri)
     request.set_form(
       [
-        ['file', File.open('./shortest copy.csv'), content_type: 'text/csv']
+        ['file', File.open(file_location), content_type: 'text/csv']
       ],
       'multipart/form-data'
     )
