@@ -2,10 +2,15 @@ require 'net/http'
 require 'json'
 require_relative 'lib/signing'
 require_relative 'lib/order'
+require_relative 'lib/bulk'
 
 class Brawndo
   def order
     @order
+  end
+
+  def bulk
+    @bulk
   end
 
   def initialize(params)
