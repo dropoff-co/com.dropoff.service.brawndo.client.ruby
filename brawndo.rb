@@ -20,6 +20,7 @@ class Brawndo
     @host         = params['host']
     @api_url      = params['api_url']
     @order        = Order.new(params)
+    @bulk         = Bulk.new(params)
   end
 
   def info()
